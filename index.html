@@ -107,6 +107,16 @@
             margin-bottom: 2rem;
         }
 
+        .profile-img {
+            flex-shrink: 0;
+            width: 240px;
+            height: 300px;
+            object-fit: cover;      /* Prevents stretching or distortion */
+            border-radius: 8px;     /* Rounded corners matching the design */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid #ddd;
+        }
+
         .profile-img-placeholder {
             flex-shrink: 0;
             width: 240px;
@@ -415,14 +425,8 @@
         <!-- HOME SECTION -->
         <section id="home">
             <div class="profile-hero">
-                <div class="profile-img-placeholder">
-                    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
-                    <span><strong>Xingyao Wu, Ph.D.</strong></span>
-                    <span style="font-size: 0.75rem;">Tenure-Track Professor <br>Shandong University</span>
-                </div>
+                <!-- Real Profile Image -->
+                <img src="profile.jpg" alt="Dr. Xingyao Wu" class="profile-img">
                 
                 <div class="profile-details">
                     <h1>Xingyao Wu</h1>
