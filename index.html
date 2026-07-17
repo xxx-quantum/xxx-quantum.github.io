@@ -80,9 +80,14 @@
             padding: 2rem;
         }
 
+        /* 
+           FIX 1: Adds scroll margins so browser scrolling lands 
+           perfectly below the fixed navigation header
+        */
         section {
             padding: 4rem 0 2rem 0;
             border-bottom: 1px solid #eef0f2;
+            scroll-margin-top: 80px; /* Desktop Header Height */
         }
 
         section:last-of-type {
@@ -389,6 +394,11 @@
                 padding: 0 0.5rem 0.25rem 0.5rem; /* Small bottom padding for safe spacing */
             }
 
+            /* Adjust scrolling landing target for taller mobile nav layout */
+            section {
+                scroll-margin-top: 115px; 
+            }
+
             h2::after {
                 left: 50%;
                 transform: translateX(-50%);
@@ -624,21 +634,18 @@
     </div>
 
     <!-- Scroll & Navigation Active Script -->
-    <!-- Scroll & Navigation Active Script -->
     <script>
         const sections = document.querySelectorAll('section');
         const navLinks = document.querySelectorAll('nav a');
         
-        // Flag to prevent IntersectionObserver from fighting with manual click scrolling
         let isScrollingFromClick = false;
         let scrollTimeout = null;
 
-        // Helper function to handle highlighting and centering of a menu item
+        // Helper function to update classes and slide-center the active link
         function setActiveLink(targetHref) {
             navLinks.forEach(link => {
                 if (link.getAttribute('href') === targetHref) {
                     link.classList.add('active');
-                    // Smoothly center the active item inside the horizontal scrolling nav bar
                     link.scrollIntoView({
                         behavior: 'smooth',
                         block: 'nearest',
@@ -650,7 +657,19 @@
             });
         }
 
-        // 1. Handle Menu Taps (Clicks)
+        // FIX 2 (Part A): Release lock instantly if the user manually scrolls or touches the screen
+        function forceReleaseLock() {
+            if (isScrollingFromClick) {
+                isScrollingFromClick = false;
+                if (scrollTimeout) clearTimeout(scrollTimeout);
+            }
+        }
+
+        // Listen to explicit human input events on the main page
+        window.addEventListener('wheel', forceReleaseLock, { passive: true });
+        window.addEventListener('touchstart', forceReleaseLock, { passive: true });
+
+        // 1. Handle Link Taps/Clicks
         navLinks.forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -658,19 +677,17 @@
                 const targetSection = document.querySelector(targetId);
 
                 if (targetSection) {
-                    // Lock observer updates
                     isScrollingFromClick = true;
                     setActiveLink(targetId);
 
-                    // Smoothly scroll the page to the section
+                    // Smooth scroll takes CSS 'scroll-margin-top' values into calculation!
                     targetSection.scrollIntoView({
                         behavior: 'smooth'
                     });
 
-                    // Clear any existing timeout and release lock after smooth scroll finishes
                     if (scrollTimeout) clearTimeout(scrollTimeout);
                     
-                    // 800ms is generally plenty of time for smooth scroll to complete
+                    // Fail-safe release after 800ms if no other event cancels it
                     scrollTimeout = setTimeout(() => {
                         isScrollingFromClick = false;
                     }, 800);
@@ -678,15 +695,14 @@
             });
         });
 
-        // 2. Intersection Observer for Natural Scrolling
+        // 2. Intersection Observer
         const observerOptions = {
             root: null,
-            rootMargin: '-50% 0px -50% 0px', // Triggers when section is in the middle 50% of the screen
+            rootMargin: '-40% 0px -40% 0px', // Adjusted bounds for better precision
             threshold: 0
         };
 
         const observer = new IntersectionObserver((entries) => {
-            // If we are auto-scrolling due to a click, ignore these intersection events
             if (isScrollingFromClick) return;
 
             entries.forEach(entry => {
