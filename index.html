@@ -624,46 +624,75 @@
     </div>
 
     <!-- Scroll & Navigation Active Script -->
+    <!-- Scroll & Navigation Active Script -->
     <script>
-        // 1. Smooth Scrolling on Link Clicks
-        document.querySelectorAll('nav a').forEach(anchor => {
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('nav a');
+        
+        // Flag to prevent IntersectionObserver from fighting with manual click scrolling
+        let isScrollingFromClick = false;
+        let scrollTimeout = null;
+
+        // Helper function to handle highlighting and centering of a menu item
+        function setActiveLink(targetHref) {
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === targetHref) {
+                    link.classList.add('active');
+                    // Smoothly center the active item inside the horizontal scrolling nav bar
+                    link.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'nearest',
+                        inline: 'center'
+                    });
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        }
+
+        // 1. Handle Menu Taps (Clicks)
+        navLinks.forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 e.preventDefault();
                 const targetId = this.getAttribute('href');
-                document.querySelector(targetId).scrollIntoView({
-                    behavior: 'smooth'
-                });
+                const targetSection = document.querySelector(targetId);
+
+                if (targetSection) {
+                    // Lock observer updates
+                    isScrollingFromClick = true;
+                    setActiveLink(targetId);
+
+                    // Smoothly scroll the page to the section
+                    targetSection.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+
+                    // Clear any existing timeout and release lock after smooth scroll finishes
+                    if (scrollTimeout) clearTimeout(scrollTimeout);
+                    
+                    // 800ms is generally plenty of time for smooth scroll to complete
+                    scrollTimeout = setTimeout(() => {
+                        isScrollingFromClick = false;
+                    }, 800);
+                }
             });
         });
 
-        // 2. Intersection Observer to Detect Scroll Section, Highlight and Center It
-        const sections = document.querySelectorAll('section');
-        const navLinks = document.querySelectorAll('nav a');
-
+        // 2. Intersection Observer for Natural Scrolling
         const observerOptions = {
             root: null,
-            rootMargin: '-50% 0px -50% 0px', // Triggers when section reaches mid-viewport
+            rootMargin: '-50% 0px -50% 0px', // Triggers when section is in the middle 50% of the screen
             threshold: 0
         };
 
         const observer = new IntersectionObserver((entries) => {
+            // If we are auto-scrolling due to a click, ignore these intersection events
+            if (isScrollingFromClick) return;
+
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     const activeId = entry.target.getAttribute('id');
-                    
-                    navLinks.forEach(link => {
-                        if (link.getAttribute('href') === `#${activeId}`) {
-                            link.classList.add('active');
-                            // Smoothly center the menu item inside horizontal scrolling container
-                            link.scrollIntoView({
-                                behavior: 'smooth',
-                                block: 'nearest',
-                                inline: 'center'
-                            });
-                        } else {
-                            link.classList.remove('active');
-                        }
-                    });
+                    setActiveLink(`#${activeId}`);
                 }
             });
         }, observerOptions);
