@@ -49,6 +49,7 @@
 
         nav {
             display: block;
+            scroll-behavior: smooth; /* Enables smooth automatic centering */
         }
 
         nav ul {
@@ -62,13 +63,14 @@
             color: #555;
             font-weight: 500;
             font-size: 0.95rem;
-            transition: color 0.3s ease;
+            transition: color 0.3s ease, font-weight 0.2s ease;
             white-space: nowrap; /* Prevent individual text links from wrapping */
         }
 
         nav ul li a:hover,
         nav ul li a.active {
             color: #0056b3;
+            font-weight: 700; /* Distinct styling when active */
         }
 
         /* Container & Grid Setup */
@@ -409,9 +411,9 @@
     <header>
         <div class="nav-container">
             <a href="#home" class="logo">Dr. Xingyao Wu</a>
-            <nav>
+            <nav id="nav-bar">
                 <ul>
-                    <li><a href="#home">Home</a></li>
+                    <li><a href="#home" class="active">Home</a></li>
                     <li><a href="#people">People</a></li>
                     <li><a href="#research">Research</a></li>
                     <li><a href="#publications">Publications</a></li>
@@ -621,8 +623,9 @@
 
     </div>
 
-    <!-- Smooth Scrolling Utility -->
+    <!-- Scroll & Navigation Active Script -->
     <script>
+        // 1. Smooth Scrolling on Link Clicks
         document.querySelectorAll('nav a').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -632,6 +635,40 @@
                 });
             });
         });
+
+        // 2. Intersection Observer to Detect Scroll Section, Highlight and Center It
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('nav a');
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '-50% 0px -50% 0px', // Triggers when section reaches mid-viewport
+            threshold: 0
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const activeId = entry.target.getAttribute('id');
+                    
+                    navLinks.forEach(link => {
+                        if (link.getAttribute('href') === `#${activeId}`) {
+                            link.classList.add('active');
+                            // Smoothly center the menu item inside horizontal scrolling container
+                            link.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'nearest',
+                                inline: 'center'
+                            });
+                        } else {
+                            link.classList.remove('active');
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => observer.observe(section));
     </script>
 </body>
 </html>
