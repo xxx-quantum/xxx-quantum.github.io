@@ -44,6 +44,11 @@
             font-weight: 700;
             color: #0056b3;
             text-decoration: none;
+            flex-shrink: 0;
+        }
+
+        nav {
+            display: block;
         }
 
         nav ul {
@@ -58,6 +63,7 @@
             font-weight: 500;
             font-size: 0.95rem;
             transition: color 0.3s ease;
+            white-space: nowrap; /* Prevent individual text links from wrapping */
         }
 
         nav ul li a:hover,
@@ -111,32 +117,10 @@
             flex-shrink: 0;
             width: 240px;
             height: 300px;
-            object-fit: cover;      /* Prevents stretching or distortion */
-            border-radius: 8px;     /* Rounded corners matching the design */
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            border: 1px solid #ddd;
-        }
-
-        .profile-img-placeholder {
-            flex-shrink: 0;
-            width: 240px;
-            height: 300px;
-            background-color: #eaeaea;
+            object-fit: cover;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 1.5rem;
-            color: #777;
             border: 1px solid #ddd;
-        }
-
-        .profile-img-placeholder span {
-            font-size: 0.85rem;
-            margin-top: 0.5rem;
         }
 
         .profile-details h1 {
@@ -220,7 +204,7 @@
             color: #222;
         }
 
-        /* NEW: Vertically Scrollable Publications Container */
+        /* Vertically Scrollable Publications Container */
         .publications-scroll-box {
             max-height: 480px;
             overflow-y: auto;
@@ -231,7 +215,6 @@
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
         }
 
-        /* Customize scrollbar appearance for the box */
         .publications-scroll-box::-webkit-scrollbar {
             width: 8px;
         }
@@ -283,7 +266,7 @@
             font-size: 0.95rem;
         }
 
-        /* NEW: Horizontally Swipable Gallery Setup */
+        /* Horizontally Swipable Gallery Setup */
         .gallery-slider-container {
             position: relative;
             width: 100%;
@@ -300,7 +283,6 @@
             -webkit-overflow-scrolling: touch;
         }
 
-        /* Hide scrollbar default representation but keep functionality */
         .gallery-swipe-wrapper::-webkit-scrollbar {
             height: 6px;
         }
@@ -314,7 +296,7 @@
         }
 
         .gallery-item {
-            flex: 0 0 320px; /* Width of each slide on desktop */
+            flex: 0 0 320px;
             scroll-snap-align: start;
             background-color: #fff;
             border-radius: 8px;
@@ -371,19 +353,40 @@
                 text-align: center;
                 gap: 1.5rem;
             }
-            .profile-img-placeholder {
+            .profile-img {
                 width: 200px;
                 height: 250px;
             }
+
+            /* Responsive Navigation updates */
             .nav-container {
                 flex-direction: column;
-                gap: 1rem;
+                gap: 0.75rem;
+                padding: 0.75rem 1rem;
             }
+
+            /* Enable horizontal scroll on the menu container */
+            nav {
+                width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch; /* Smooth iOS physics momentum */
+                scrollbar-width: none; /* Hide default scrollbar on Firefox */
+            }
+
+            /* Hide scrollbar on Chrome/Safari/Edge */
+            nav::-webkit-scrollbar {
+                display: none;
+            }
+
+            /* Prevent list elements from wrapping, layout in single row */
             nav ul {
-                gap: 1rem;
-                flex-wrap: wrap;
-                justify-content: center;
+                display: flex;
+                flex-wrap: nowrap; 
+                gap: 1.5rem;
+                justify-content: flex-start; /* Keeps alignment natural for overflow reading */
+                padding: 0 0.5rem 0.25rem 0.5rem; /* Small bottom padding for safe spacing */
             }
+
             h2::after {
                 left: 50%;
                 transform: translateX(-50%);
@@ -395,7 +398,7 @@
                 text-align: left;
             }
             .gallery-item {
-                flex: 0 0 85%; /* Make it wider and highly swipable on mobile */
+                flex: 0 0 85%;
             }
         }
     </style>
@@ -425,17 +428,17 @@
         <!-- HOME SECTION -->
         <section id="home">
             <div class="profile-hero">
-                <!-- Real Profile Image -->
+                <!-- Profile Image -->
                 <img src="profile.jpg" alt="Dr. Xingyao Wu" class="profile-img">
                 
                 <div class="profile-details">
                     <h1>Xingyao Wu</h1>
-                    <div class="profile-title">Tenure-Track Professor, Shandong University</div>
+                    <div class="profile-title">Tenure-Track Professor, Shandong University[cite: 1]</div>
                     <p class="profile-bio">
                         I am a tenure-track professor specializing in quantum information science, quantum circuit optimization, and physics-informed quantum algorithms. My work spans the boundaries of fundamental theoretical physics and applied quantum machine learning, with a specific focus on scaling quantum simulations and designing highly optimized software frameworks.
                     </p>
                     <p>
-                        Previously, I served as a project lead and senior research scientist at JD Explore Academy, where I led the design of the open-source quantum machine learning framework <strong>TeD-Q</strong>. I completed my postdoctoral fellowship at the Joint Center for Quantum Information and Computer Science (QuICS), University of Maryland, following my Ph.D. from the Centre for Quantum Technologies (CQT), National University of Singapore.
+                        Previously, I served as a project lead and senior research scientist at JD Explore Academy, where I led the design of the open-source quantum machine learning framework <strong>TeD-Q</strong>[cite: 1]. I completed my postdoctoral fellowship at the Joint Center for Quantum Information and Computer Science (QuICS), University of Maryland, following my Ph.D. from the Centre for Quantum Technologies (CQT), National University of Singapore[cite: 1].
                     </p>
                 </div>
             </div>
@@ -446,29 +449,29 @@
                 <div class="timeline-item">
                     <span class="time-period">2024.09 — Present</span>
                     <div class="timeline-title">Tenure-Track Professor</div>
-                    <div class="timeline-subtitle">Shandong University</div>
+                    <div class="timeline-subtitle">Shandong University[cite: 1]</div>
                 </div>
                 <div class="timeline-item">
                     <span class="time-period">2021.09 — 2024.09</span>
                     <div class="timeline-title">Senior Research Scientist & Team Lead</div>
-                    <div class="timeline-subtitle">JD Explore Academy, JD.com</div>
-                    <p style="font-size: 0.9rem; color: #555;">Led the software architecture design of JD's first differentiable quantum machine learning platform, TeD-Q.</p>
+                    <div class="timeline-subtitle">JD Explore Academy, JD.com[cite: 1]</div>
+                    <p style="font-size: 0.9rem; color: #555;">Led the software architecture design of JD's first differentiable quantum machine learning platform, TeD-Q[cite: 1].</p>
                 </div>
                 <div class="timeline-item">
                     <span class="time-period">2017.03 — 2019.01</span>
                     <div class="timeline-title">Postdoctoral Research Fellow</div>
-                    <div class="timeline-subtitle">Joint Center for Quantum Information and Computer Science (QuICS) / UMD College Park</div>
+                    <div class="timeline-subtitle">Joint Center for Quantum Information and Computer Science (QuICS) / UMD College Park[cite: 1]</div>
                 </div>
                 <div class="timeline-item">
                     <span class="time-period">2012.11 — 2017.03</span>
                     <div class="timeline-title">Ph.D. in Quantum Information</div>
-                    <div class="timeline-subtitle">Centre for Quantum Technologies (CQT), National University of Singapore</div>
-                    <p style="font-size: 0.9rem; color: #555;">Supervised by Prof. Valerio Scarani. Thesis: <em>Self-testing: Walking on the Quantum Set</em>.</p>
+                    <div class="timeline-subtitle">Centre for Quantum Technologies (CQT), National University of Singapore[cite: 1]</div>
+                    <p style="font-size: 0.9rem; color: #555;">Supervised by Prof. Valerio Scarani. Thesis: <em>Self-testing: Walking on the Quantum Set</em>[cite: 1].</p>
                 </div>
                 <div class="timeline-item">
                     <span class="time-period">2008.09 — 2012.07</span>
                     <div class="timeline-title">B.S. in Theoretical Physics</div>
-                    <div class="timeline-subtitle">Special Class for the Gifted Young, University of Science and Technology of China (USTC)</div>
+                    <div class="timeline-subtitle">Special Class for the Gifted Young, University of Science and Technology of China (USTC)[cite: 1]</div>
                 </div>
             </div>
         </section>
@@ -481,8 +484,8 @@
                 <div class="research-card">
                     <h3>Academic Mentors</h3>
                     <ul style="padding-left: 1.25rem; font-size: 0.95rem; color: #4a4a4a;">
-                        <li style="margin-bottom: 0.5rem;"><strong>Prof. Valerio Scarani</strong> (Ph.D. Advisor, Centre for Quantum Technologies, NUS)</li>
-                        <li><strong>Prof. Jacob M. Taylor</strong> (Postdoctoral Host, QuICS / University of Maryland)</li>
+                        <li style="margin-bottom: 0.5rem;"><strong>Prof. Valerio Scarani</strong> (Ph.D. Advisor, Centre for Quantum Technologies, NUS)[cite: 1]</li>
+                        <li><strong>Prof. Jacob M. Taylor</strong> (Postdoctoral Host, QuICS / University of Maryland)[cite: 1]</li>
                     </ul>
                 </div>
                 <div class="research-card">
@@ -524,7 +527,6 @@
             <h2>Selected Publications & Patents</h2>
             <p style="margin-bottom: 1.5rem; color: #666; font-size: 0.95rem;">Scroll inside the box below to view academic publications and industrial IP disclosures.</p>
             
-            <!-- Scrollable box containing all items -->
             <div class="publications-scroll-box">
                 <h3 style="margin-bottom: 1rem; color: #1a1a1a;">Academic Publications</h3>
                 
@@ -567,7 +569,6 @@
             <h2>Gallery</h2>
             <p style="margin-bottom: 1.5rem; color: #666; font-size: 0.95rem;">Swipe or scroll horizontally to see pictures from research offices and laboratories.</p>
             
-            <!-- Horizontal slider layout -->
             <div class="gallery-slider-container">
                 <div class="gallery-swipe-wrapper">
                     
