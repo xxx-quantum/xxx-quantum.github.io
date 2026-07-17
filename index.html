@@ -210,7 +210,33 @@
             color: #222;
         }
 
-        /* Publications List */
+        /* NEW: Vertically Scrollable Publications Container */
+        .publications-scroll-box {
+            max-height: 480px;
+            overflow-y: auto;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            background-color: #fcfcfd;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        /* Customize scrollbar appearance for the box */
+        .publications-scroll-box::-webkit-scrollbar {
+            width: 8px;
+        }
+        .publications-scroll-box::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 8px;
+        }
+        .publications-scroll-box::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 8px;
+        }
+        .publications-scroll-box::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
         .pub-item {
             background: #ffffff;
             padding: 1.25rem;
@@ -219,6 +245,10 @@
             box-shadow: 0 1px 4px rgba(0,0,0,0.02);
             border-left: 4px solid #ccd1d9;
             transition: border-left-color 0.3s;
+        }
+
+        .pub-item:last-child {
+            margin-bottom: 0;
         }
 
         .pub-item:hover {
@@ -243,19 +273,49 @@
             font-size: 0.95rem;
         }
 
-        /* Gallery Grid */
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        /* NEW: Horizontally Swipable Gallery Setup */
+        .gallery-slider-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .gallery-swipe-wrapper {
+            display: flex;
             gap: 1.5rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            padding: 0.5rem 0.25rem 1.5rem 0.25rem;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Hide scrollbar default representation but keep functionality */
+        .gallery-swipe-wrapper::-webkit-scrollbar {
+            height: 6px;
+        }
+        .gallery-swipe-wrapper::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        .gallery-swipe-wrapper::-webkit-scrollbar-thumb {
+            background: #0056b3;
+            border-radius: 4px;
         }
 
         .gallery-item {
+            flex: 0 0 320px; /* Width of each slide on desktop */
+            scroll-snap-align: start;
             background-color: #fff;
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             border: 1px solid #eee;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-4px);
         }
 
         .gallery-img-placeholder {
@@ -274,6 +334,7 @@
             font-size: 0.85rem;
             color: #555;
             border-top: 1px solid #eee;
+            min-height: 70px;
         }
 
         /* Contact Section */
@@ -323,6 +384,9 @@
             .timeline-item {
                 text-align: left;
             }
+            .gallery-item {
+                flex: 0 0 85%; /* Make it wider and highly swipable on mobile */
+            }
         }
     </style>
 </head>
@@ -351,7 +415,6 @@
         <!-- HOME SECTION -->
         <section id="home">
             <div class="profile-hero">
-                <!-- Profile Image Placeholder -->
                 <div class="profile-img-placeholder">
                     <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -455,55 +518,83 @@
         <!-- PUBLICATIONS & PATENTS SECTION -->
         <section id="publications">
             <h2>Selected Publications & Patents</h2>
+            <p style="margin-bottom: 1.5rem; color: #666; font-size: 0.95rem;">Scroll inside the box below to view academic publications and industrial IP disclosures.</p>
             
-            <h3 style="margin: 1.5rem 0 1rem 0; color: #1a1a1a;">Academic Publications</h3>
-            
-            <div class="pub-item">
-                <div class="authors">Kanglong Li, Zesheng Shi, Meng-Jun Hu, Yu-Xin Jin, Xiaohu Yan, Fazhi He, <strong>Xingyao Wu</strong> (Corresponding Author)</div>
-                <div class="pub-title">Mitigating Permutation Bias in Quantum Neural Networks</div>
-                <div class="journal">Entropy, 27(2), 185 (2025)</div>
-            </div>
+            <!-- Scrollable box containing all items -->
+            <div class="publications-scroll-box">
+                <h3 style="margin-bottom: 1rem; color: #1a1a1a;">Academic Publications</h3>
+                
+                <div class="pub-item">
+                    <div class="authors">Kanglong Li, Zesheng Shi, Meng-Jun Hu, Yu-Xin Jin, Xiaohu Yan, Fazhi He, <strong>Xingyao Wu</strong> (Corresponding Author)</div>
+                    <div class="pub-title">Mitigating Permutation Bias in Quantum Neural Networks</div>
+                    <div class="journal">Entropy, 27(2), 185 (2025)</div>
+                </div>
 
-            <div class="pub-item">
-                <div class="authors"><strong>Xingyao Wu</strong>, Jean-Daniel Bancal, Matthew McKague, Valerio Scarani</div>
-                <div class="pub-title">Device-Independent Self-Testing of Hook-Shaped Quantum States</div>
-                <div class="journal">New Journal of Physics, 18, 025002</div>
-            </div>
+                <div class="pub-item">
+                    <div class="authors"><strong>Xingyao Wu</strong>, Jean-Daniel Bancal, Matthew McKague, Valerio Scarani</div>
+                    <div class="pub-title">Device-Independent Self-Testing of Hook-Shaped Quantum States</div>
+                    <div class="journal">New Journal of Physics, 18, 025002</div>
+                </div>
 
-            <div class="pub-item">
-                <div class="authors">Sandesh S. Kala, Justyna P. Zwolak, Stephen Ragole, Neil M. Zimmerman, Michael D. Stewart, Jacob M. Taylor, <strong>Xingyao Wu</strong></div>
-                <div class="pub-title">Geometric and Physical Auto-tuning of Semiconductor Quantum Dots</div>
-                <div class="journal">npj Quantum Information, 5, 121</div>
-            </div>
+                <div class="pub-item">
+                    <div class="authors">Sandesh S. Kala, Justyna P. Zwolak, Stephen Ragole, Neil M. Zimmerman, Michael D. Stewart, Jacob M. Taylor, <strong>Xingyao Wu</strong></div>
+                    <div class="pub-title">Geometric and Physical Auto-tuning of Semiconductor Quantum Dots</div>
+                    <div class="journal">npj Quantum Information, 5, 121</div>
+                </div>
 
-            <h3 style="margin: 2rem 0 1rem 0; color: #1a1a1a;">Patents & Open Source</h3>
-            <div class="pub-item" style="border-left-color: #008080;">
-                <div class="authors"><strong>Project Lead / First Architect</strong></div>
-                <div class="pub-title">TeD-Q: A Differentiable Quantum Programming and Machine Learning Framework</div>
-                <div class="journal">Open-Source Platform on GitHub</div>
-            </div>
-            <div class="pub-item" style="border-left-color: #008080;">
-                <div class="authors">Inventor Group (JD.com)</div>
-                <div class="pub-title">Gradient-Based Automated Prompt Tuning System and Quantum Hardware Control Methods</div>
-                <div class="journal">Patent No: CN114638369A</div>
+                <h3 style="margin: 2rem 0 1rem 0; color: #1a1a1a;">Patents & Open Source</h3>
+                
+                <div class="pub-item" style="border-left-color: #008080;">
+                    <div class="authors"><strong>Project Lead / First Architect</strong></div>
+                    <div class="pub-title">TeD-Q: A Differentiable Quantum Programming and Machine Learning Framework</div>
+                    <div class="journal">Open-Source Platform on GitHub</div>
+                </div>
+                
+                <div class="pub-item" style="border-left-color: #008080;">
+                    <div class="authors">Inventor Group (JD.com)</div>
+                    <div class="pub-title">Gradient-Based Automated Prompt Tuning System and Quantum Hardware Control Methods</div>
+                    <div class="journal">Patent No: CN114638369A</div>
+                </div>
             </div>
         </section>
 
         <!-- GALLERY SECTION -->
         <section id="gallery">
             <h2>Gallery</h2>
-            <div class="gallery-grid">
-                <div class="gallery-item">
-                    <div class="gallery-img-placeholder">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+            <p style="margin-bottom: 1.5rem; color: #666; font-size: 0.95rem;">Swipe or scroll horizontally to see pictures from research offices and laboratories.</p>
+            
+            <!-- Horizontal slider layout -->
+            <div class="gallery-slider-container">
+                <div class="gallery-swipe-wrapper">
+                    
+                    <div class="gallery-item">
+                        <div class="gallery-img-placeholder">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                        </div>
+                        <div class="gallery-caption">Joint Center for Quantum Information (QuICS), Atlantic Building, University of Maryland</div>
                     </div>
-                    <div class="gallery-caption">Joint Center for Quantum Information (QuICS), Atlantic Building, University of Maryland</div>
-                </div>
-                <div class="gallery-item">
-                    <div class="gallery-img-placeholder">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+
+                    <div class="gallery-item">
+                        <div class="gallery-img-placeholder">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                        </div>
+                        <div class="gallery-caption">SDU Campus & Theoretical Physics Research Offices</div>
                     </div>
-                    <div class="gallery-caption">SDU Campus & Theoretical Physics Research Offices</div>
+
+                    <div class="gallery-item">
+                        <div class="gallery-img-placeholder">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                        </div>
+                        <div class="gallery-caption">Centre for Quantum Technologies (CQT), Singapore</div>
+                    </div>
+
+                    <div class="gallery-item">
+                        <div class="gallery-img-placeholder">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                        </div>
+                        <div class="gallery-caption">Academic Seminar & Presentation Rooms</div>
+                    </div>
+
                 </div>
             </div>
         </section>
